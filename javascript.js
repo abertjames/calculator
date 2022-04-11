@@ -2,9 +2,11 @@ let display = document.getElementById("para");
 display.textContent = "0";
 function displayNumber (number) {
     if (display.textContent.length == 11 ){
+    } else if (display.textContent == "0" && number == "."){
+        display.textContent = display.textContent.concat(number)
     }else if (display.textContent == "0"){
         display.textContent = number
-    } else if (number == "." && display.textContent.includes(".")){
+    }else if (number == "." && display.textContent.includes(".")){
     } else {
         display.textContent = display.textContent.concat(number)
     }
@@ -12,8 +14,9 @@ function displayNumber (number) {
 
 function backspace (){
     if (display.textContent == "0"){
-        return
-    } else {
+    } else if (display.textContent.length == "1"){
+        display.textContent = "0"
+    }else {
         display.textContent = display.textContent.slice(0,-1)
     }
 }
