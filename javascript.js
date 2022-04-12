@@ -7,8 +7,13 @@ display.textContent = "0";
 
 function displayNumber (number) {
 
+    if (miscKey == true){
+        display.textContent = number;
+        currentNumber = number;
+        miscKey = false;
+    
     //restricts input to limit of screen size 
-    if (display.textContent.length == 11){
+    } else if (display.textContent.length == 11){
         display.textContent = number;
         currentNumber = number;
 
@@ -56,6 +61,7 @@ function clearCalc(){
     previousNumber = null;
     operation = null;
     result = null;
+    miscKey = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,14 +85,26 @@ function divide (prevNum, curNum) {
     return result = rounder (prevNum / curNum);
 }
 
+let miscKey = false;
 function percent () {
-    currentNumber /= 100;
-    display.textContent = rounder (currentNumber);
+    // if (currentNumber != null){
+    //     // currentNumber /= 100;
+    //     display.textContent = rounder (parseInt(display.textContent)/100);
+    //     currentNumber = display.textContent
+    // }
+
+        // currentNumber /= 100;
+        display.textContent = rounder (parseInt(display.textContent)/100);
+        currentNumber = display.textContent
+        miscKey = true
+    
 }
 
 function posiNegi () {
     currentNumber *= -1;
     display.textContent = currentNumber;
+    miscKey = true;
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
