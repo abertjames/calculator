@@ -8,7 +8,7 @@ display.textContent = "0";
 function displayNumber (number) {
 
     //restricts input to limit of screen size 
-    if (display.textContent.length == 11 ){
+    if (display.textContent.length == 11 && operation == null ){
 
     //allows there to be a leading zero in the display
     } else if (display.textContent == "0" && number == "."){
@@ -61,25 +61,25 @@ function clearCalc(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function add (prevNum, curNum) {
-    return result = (+prevNum + +curNum);
+    return result = rounder(+prevNum + +curNum);
 }
 
 function subtract (prevNum, curNum) {
-    return result = (+prevNum - +curNum);
+    return result = rounder(+prevNum - +curNum);
 }
 
 function multiply (prevNum, curNum) {
-    return result = (prevNum * curNum);
+    return result = rounder (prevNum * curNum);
 
 }
 
 function divide (prevNum, curNum) {
-    return result = (prevNum / curNum);
+    return result = rounder (prevNum / curNum);
 }
 
 function percent () {
     currentNumber /= 100;
-    display.textContent = currentNumber;
+    display.textContent = rounder (currentNumber);
 }
 
 function posiNegi () {
@@ -117,6 +117,7 @@ function operator (operationCall) {
         } else if (operation == "multiplication"){
             multiply(previousNumber, currentNumber)
         } else if (operation == "division"){
+            // user cannot divide by zero, boohoo
             if (currentNumber == "0"){
                 display.textContent = "BooHoo";
                 currentNumber = null;
@@ -144,13 +145,22 @@ function operator (operationCall) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////// rounder ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function rounder (res){
     //rounds small numbers 
     if (!Number.isInteger(res)){
-        return Math.round(res * 100) / 100
-    //rounds large numbers 
+        return parseFloat(res.toFixed(4))
+    
+    // javascript automatically switches to scientific notation for very large numbers
+    //by adding this check i putting it in scientific notation twice
+    // assuming largest number possible is 99999999999 x 9999999999 
+    } else if (res.toString().includes("e")) {
+        return (`${res.toString().slice(0,4)}` + `${res.toString().slice(-4)}`)
+        //rounds large numbers
     } else if (res.toString().length > 11){
-        return (`${res.toString().slice(0,1)}` + "." + `${res.toString().slice(1,3)}` + "e" + `${res.toString().length-1}`)
+        return (`${res.toString().slice(0,1)}` + "." + `${res.toString().slice(1,3)}` + "e" + "+" + `${res.toString().length-1}`)
+    } else {
+        return res
     }
 }
 
