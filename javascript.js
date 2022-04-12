@@ -28,7 +28,7 @@ function displayNumber (number) {
 }
 
 function backspace (){
-    if (display.textContent == "0"){
+    if (display.textContent == "0" || currentNumber == null){
     } else if (display.textContent.length == "1"){
         display.textContent = "0"
         currentNumber = display.textContent;
@@ -56,11 +56,6 @@ function add (prevNum, curNum) {
     previousNumber = result ;
     display.textContent = result ;
     currentNumber = null;
-    // operation = null;
-
-    // currentNumber = result;
-    // display.textContent = result;
-    // previousNumber = null;
 }
 
 function subtract (prevNum, curNum) {
@@ -68,7 +63,6 @@ function subtract (prevNum, curNum) {
     previousNumber = result ;
     display.textContent = result ;
     currentNumber = null;
-    // operation = null;
 }
 
 function multiply (prevNum, curNum) {
@@ -76,19 +70,19 @@ function multiply (prevNum, curNum) {
     previousNumber = result ;
     display.textContent = result ;
     currentNumber = null;
-    // operation = null;
 }
 
 function divide (prevNum, curNum) {
     if (curNum == 0){
-        display.textContent = "BooHoo"
-        // operation = null;
+        display.textContent = "BooHoo";
+        currentNumber = null;
+        previousNumber = null;
+
     } else {
         result = (prevNum / curNum);
         previousNumber = result ;
         display.textContent = result ;
         currentNumber = null;
-        // operation = null;
     }
 }
 
@@ -116,14 +110,12 @@ function operator (operationCall) {
     //initial case where only current number is defined (0)
     if (operation == null && currentNumber != null && previousNumber == null){
         operation = operationCall;
-        // display.textContent = "0"
         previousNumber = currentNumber;
         currentNumber = null;
 
         // allows user to change operation before inputting second number 
     } else if (operation == null && previousNumber != null && currentNumber == null){
         operation = operationCall;
-        // display.textContent = "0"
 
         //all three components must be defined before an operation can proceed 
     } else if (operation != null && previousNumber != null && currentNumber != null){
