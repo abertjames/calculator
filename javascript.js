@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////// display functins //////////////////////////////////////////
+//////////////////////////////////////////// display/input functins ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 let display = document.getElementById("para");
@@ -7,8 +7,10 @@ display.textContent = "0";
 
 function displayNumber (number) {
 
+    //restricts input to limit of screen size 
     if (display.textContent.length == 11 ){
 
+    //allows there to be a leading zero in the display
     } else if (display.textContent == "0" && number == "."){
         display.textContent = display.textContent.concat(number)
         currentNumber = display.textContent;
@@ -17,16 +19,22 @@ function displayNumber (number) {
         display.textContent = number
         currentNumber = display.textContent;
 
+    // only allow for one decimal point
     } else if (number == "." && display.textContent.includes(".")){
+
+    // if current number doesnt exit but there is a displayed number the display clears and updates
     } else if (currentNumber == null){
         display.textContent = number
         currentNumber = display.textContent;
+
+    //updates number digit by digit
     } else {
         display.textContent = display.textContent.concat(number)
         currentNumber = display.textContent;
     }
 }
 
+// allows user to delete through the current number but not the result of an operation/feedback 
 function backspace (){
     if (display.textContent == "0" || currentNumber == null){
     } else if (display.textContent.length == "1"){
@@ -39,6 +47,7 @@ function backspace (){
     }
 }
 
+// resets back to initial conditions 
 function clearCalc(){
     display.textContent = "0";
     currentNumber = 0;
@@ -52,38 +61,20 @@ function clearCalc(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function add (prevNum, curNum) {
-    result = (+prevNum + +curNum);
-    previousNumber = result ;
-    display.textContent = result ;
-    currentNumber = null;
+    return result = (+prevNum + +curNum);
 }
 
 function subtract (prevNum, curNum) {
-    result = (+prevNum - +curNum);
-    previousNumber = result ;
-    display.textContent = result ;
-    currentNumber = null;
+    return result = (+prevNum - +curNum);
 }
 
 function multiply (prevNum, curNum) {
-    result = (prevNum * curNum);
-    previousNumber = result ;
-    display.textContent = result ;
-    currentNumber = null;
+    return result = (prevNum * curNum);
+
 }
 
 function divide (prevNum, curNum) {
-    if (curNum == 0){
-        display.textContent = "BooHoo";
-        currentNumber = null;
-        previousNumber = null;
-
-    } else {
-        result = (prevNum / curNum);
-        previousNumber = result ;
-        display.textContent = result ;
-        currentNumber = null;
-    }
+    return result = (prevNum / curNum);
 }
 
 function percent () {
@@ -126,7 +117,15 @@ function operator (operationCall) {
         } else if (operation == "multiplication"){
             multiply(previousNumber, currentNumber)
         } else if (operation == "division"){
-            divide(previousNumber, currentNumber)
+            if (currentNumber == "0"){
+                display.textContent = "BooHoo";
+                currentNumber = null;
+                previousNumber = null;
+                operation = null;
+                return
+            } else {
+                divide(previousNumber, currentNumber)
+            }
         }
         //no new operation will be logged if the = button is pressed. 
         //otherwise the next operation to perform is logged
@@ -135,5 +134,27 @@ function operator (operationCall) {
         } else {
             operation = operationCall
         }
+         
+        previousNumber = result ;
+        display.textContent = result ;
+        currentNumber = null;
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////// rounder ///////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+function rounder (res){
+    //rounds small numbers 
+    if (!Number.isInteger(res)){
+        return Math.round(res * 100) / 100
+    //rounds large numbers 
+    } else if (res.toString().length > 11){
+        return (`${res.toString().slice(0,1)}` + "." + `${res.toString().slice(1,3)}` + "e" + `${res.toString().length-1}`)
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// keyboard input ////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
