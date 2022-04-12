@@ -2,7 +2,6 @@
 /////////////////////////////////////////////// display functins //////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 let display = document.getElementById("para");
 display.textContent = "0";
 
@@ -19,6 +18,9 @@ function displayNumber (number) {
         currentNumber = display.textContent;
 
     } else if (number == "." && display.textContent.includes(".")){
+    } else if (currentNumber == null){
+        display.textContent = number
+        currentNumber = display.textContent;
     } else {
         display.textContent = display.textContent.concat(number)
         currentNumber = display.textContent;
@@ -31,42 +33,73 @@ function backspace (){
         display.textContent = "0"
         currentNumber = display.textContent;
 
-    }else {
+    } else {
         display.textContent = display.textContent.slice(0,-1)
         currentNumber = display.textContent;
     }
 }
 
-function clearDisplay(){
+function clearCalc(){
     display.textContent = "0";
     currentNumber = 0;
+    previousNumber = null;
+    operation = null;
+    result = null;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////// operations ////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function add (previousNumber, currentNumber) {
-    return (previousNumber + currentNumber)
-}
-function subtract (currentNumber,previousNumber) {
-    return (previousNumber - currentNumber)
+function add (prevNum, curNum) {
+    result = (+prevNum + +curNum);
+    previousNumber = result ;
+    display.textContent = result ;
+    currentNumber = null;
+    // operation = null;
+
+    // currentNumber = result;
+    // display.textContent = result;
+    // previousNumber = null;
 }
 
-function multiply (currentNumber,previousNumber) {
-    return (previousNumber * currentNumber)
+function subtract (prevNum, curNum) {
+    result = (+prevNum - +curNum);
+    previousNumber = result ;
+    display.textContent = result ;
+    currentNumber = null;
+    // operation = null;
 }
 
-function divide (currentNumber,previousNumber) {
-    return (previousNumber / currentNumber)
+function multiply (prevNum, curNum) {
+    result = (prevNum * curNum);
+    previousNumber = result ;
+    display.textContent = result ;
+    currentNumber = null;
+    // operation = null;
 }
 
-function percent (currentNumber) {
-    return currentNumber / 100
+function divide (prevNum, curNum) {
+    if (curNum == 0){
+        display.textContent = "BooHoo"
+        // operation = null;
+    } else {
+        result = (prevNum / curNum);
+        previousNumber = result ;
+        display.textContent = result ;
+        currentNumber = null;
+        // operation = null;
+    }
 }
 
-function posiNegi (currentNumber) {
-    return currentNumber * -1
+function percent () {
+    currentNumber /= 100;
+    display.textContent = currentNumber;
+}
+
+function posiNegi () {
+    currentNumber *= -1;
+    display.textContent = currentNumber;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,15 +109,39 @@ function posiNegi (currentNumber) {
 let currentNumber = 0;
 let previousNumber = null;
 let operation = null; 
+let result = null;
 
-function operator (currentNumber, previousNumber, operationCall) {
-    if (operation == null && previousNumber == null){
+function operator (operationCall) {
+
+    //initial case where only current number is defined (0)
+    if (operation == null && currentNumber != null && previousNumber == null){
         operation = operationCall;
-        display.textContent = "0"
-
+        // display.textContent = "0"
         previousNumber = currentNumber;
-        currentNumber = "0";
-    } else if (operation != null && previousNumber != null){
+        currentNumber = null;
 
+        // allows user to change operation before inputting second number 
+    } else if (operation == null && previousNumber != null && currentNumber == null){
+        operation = operationCall;
+        // display.textContent = "0"
+
+        //all three components must be defined before an operation can proceed 
+    } else if (operation != null && previousNumber != null && currentNumber != null){
+        if (operation == "addition"){
+            add(previousNumber, currentNumber)
+        } else if (operation == "subtraction"){
+            subtract(previousNumber, currentNumber)
+        } else if (operation == "multiplication"){
+            multiply(previousNumber, currentNumber)
+        } else if (operation == "division"){
+            divide(previousNumber, currentNumber)
+        }
+        //no new operation will be logged if the = button is pressed. 
+        //otherwise the next operation to perform is logged
+        if (operationCall == "equals"){
+            operation = null;
+        } else {
+            operation = operationCall
+        }
     }
 }
