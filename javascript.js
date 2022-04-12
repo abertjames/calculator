@@ -8,7 +8,9 @@ display.textContent = "0";
 function displayNumber (number) {
 
     //restricts input to limit of screen size 
-    if (display.textContent.length == 11 && operation == null ){
+    if (display.textContent.length == 11){
+        display.textContent = number;
+        currentNumber = number;
 
     //allows there to be a leading zero in the display
     } else if (display.textContent == "0" && number == "."){
