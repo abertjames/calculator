@@ -7,6 +7,8 @@ display.textContent = "0";
 
 function displayNumber (number) {
 
+    // check for active miscKey, if active and user tries to type the current number 
+    // will be over written and key turned off
     if (miscKey == true){
         display.textContent = number;
         currentNumber = number;
@@ -17,11 +19,12 @@ function displayNumber (number) {
         display.textContent = number;
         currentNumber = number;
 
-    //allows there to be a leading zero in the display
+    //allows there to be a leading zero for decimals
     } else if (display.textContent == "0" && number == "."){
         display.textContent = display.textContent.concat(number)
         currentNumber = display.textContent;
-
+    
+     // makes sure there are no leading zeroes for larger numbers  
     } else if (display.textContent == "0"){
         display.textContent = number
         currentNumber = display.textContent;
@@ -29,7 +32,8 @@ function displayNumber (number) {
     // only allow for one decimal point
     } else if (number == "." && display.textContent.includes(".")){
 
-    // if current number doesnt exit but there is a displayed number the display clears and updates
+    // if current number doesnt exit but there is a displayed number (usually the result) 
+    // the display clears and updates
     } else if (currentNumber == null){
         display.textContent = number
         currentNumber = display.textContent;
@@ -60,7 +64,7 @@ function clearCalc(){
     currentNumber = 0;
     previousNumber = null;
     operation = null;
-    result = null;
+    result = {};
     miscKey = false;
 }
 
@@ -68,53 +72,55 @@ function clearCalc(){
 /////////////////////////////////////////////// operations ////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//displays the rounded number but retains the actual
 function add (prevNum, curNum) {
-    return result = rounder(+prevNum + +curNum);
+    result.whole = (+prevNum + +curNum);
+    result.rounded = rounder(result.whole);
+    return result
 }
 
 function subtract (prevNum, curNum) {
-    return result = rounder(+prevNum - +curNum);
+    result.whole = (+prevNum - +curNum)
+    result.rounded = rounder(result.whole);
+    return result
 }
 
 function multiply (prevNum, curNum) {
-    return result = rounder (prevNum * curNum);
-
+    result.whole = (prevNum * curNum);
+    result.rounded = rounder(result.whole);
+    return result
 }
 
 function divide (prevNum, curNum) {
-    return result = rounder (prevNum / curNum);
+    result.whole = (prevNum / curNum);
+    result.rounded = rounder(result.whole);
+    return result
 }
 
+// miscKey is the boolean for the % and +/- keys so that they can be used repeatedly
+// on the current number but not affect anything else 
 let miscKey = false;
 function percent () {
-    // if (currentNumber != null){
-    //     // currentNumber /= 100;
-    //     display.textContent = rounder (parseInt(display.textContent)/100);
-    //     currentNumber = display.textContent
-    // }
-
-        // currentNumber /= 100;
-        display.textContent = rounder (parseInt(display.textContent)/100);
-        currentNumber = display.textContent
-        miscKey = true
-    
+    currentNumber /= 100
+    display.textContent = rounder (parseInt(display.textContent)/100);
+    miscKey = true
 }
 
 function posiNegi () {
     currentNumber *= -1;
     display.textContent = currentNumber;
     miscKey = true;
-    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////// operator //////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// initial variables
 let currentNumber = 0;
 let previousNumber = null;
 let operation = null; 
-let result = null;
+let result = {};
 
 function operator (operationCall) {
 
@@ -124,7 +130,7 @@ function operator (operationCall) {
         previousNumber = currentNumber;
         currentNumber = null;
 
-        // allows user to change operation before inputting second number 
+        // allows user to declare operation before inputting second number 
     } else if (operation == null && previousNumber != null && currentNumber == null){
         operation = operationCall;
 
@@ -155,9 +161,9 @@ function operator (operationCall) {
         } else {
             operation = operationCall
         }
-         
-        previousNumber = result ;
-        display.textContent = result ;
+         // prepares next operation by reassigning variables
+        previousNumber = result.whole ;
+        display.textContent = result.rounded ;
         currentNumber = null;
         miscKey = false;
     }
@@ -168,22 +174,20 @@ function operator (operationCall) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function rounder (res){
-    //rounds small numbers 
+    //rounds non integer and small numbers 
     if (!Number.isInteger(res)){
         return parseFloat(res.toFixed(4))
     
     // javascript automatically switches to scientific notation for very large numbers
-    // by adding this check i putting it in scientific notation twice
-    // assuming largest number possible is 99999999999 x 9999999999. `${res.toString().slice(-4)}`)
+    // by adding this check i avoid putting it in scientific notation twice
     } else if (res.toString().includes("e")) {
         return (`${res.toString().slice(0,4)}` + `${res.toString().slice(res.toString().indexOf("e"), res.toString().length)}`);
-        // console.log(`${res.toString().slice(0,4)}`)
-        // console.log(res.toString().indexOf("e"))
-        // console.log()
-        // console.log(`${res.toString().slice(res.toString().indexOf("e"), res.toString().length)}`)
-        //rounds large numbers
+    
+    //rounds large numbers
     } else if (res.toString().length > 11){
         return (`${res.toString().slice(0,1)}` + "." + `${res.toString().slice(1,3)}` + "e" + "+" + `${res.toString().length-1}`)
+    
+    // if it doesnt need rounding it is returned 
     } else {
         return res
     }
