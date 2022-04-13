@@ -173,10 +173,14 @@ function rounder (res){
         return parseFloat(res.toFixed(4))
     
     // javascript automatically switches to scientific notation for very large numbers
-    //by adding this check i putting it in scientific notation twice
-    // assuming largest number possible is 99999999999 x 9999999999 
+    // by adding this check i putting it in scientific notation twice
+    // assuming largest number possible is 99999999999 x 9999999999. `${res.toString().slice(-4)}`)
     } else if (res.toString().includes("e")) {
-        return (`${res.toString().slice(0,4)}` + `${res.toString().slice(-4)}`)
+        return (`${res.toString().slice(0,4)}` + `${res.toString().slice(res.toString().indexOf("e"), res.toString().length)}`);
+        // console.log(`${res.toString().slice(0,4)}`)
+        // console.log(res.toString().indexOf("e"))
+        // console.log()
+        // console.log(`${res.toString().slice(res.toString().indexOf("e"), res.toString().length)}`)
         //rounds large numbers
     } else if (res.toString().length > 11){
         return (`${res.toString().slice(0,1)}` + "." + `${res.toString().slice(1,3)}` + "e" + "+" + `${res.toString().length-1}`)
@@ -190,14 +194,10 @@ function rounder (res){
 /////////////////////////////////////////// keyboard input ////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// document.addEventListener('keydown', displayNumber(e.code));
+//allows user input for number keys, backspace, and enter
 document.addEventListener('keydown', logKey);
-
 function logKey(e) {
-    // console.log(e)
-    console.log(e.keyCode);
-    // console.log(typeof(e.key))
-    if (48 <= e.keyCode && e.keyCode<= 57) {
+    if (48 <= e.keyCode && e.keyCode <= 57) {
         displayNumber(e.key)
     } else if (e.keyCode == 8) {
         backspace()
