@@ -6,8 +6,11 @@ let display = document.getElementById("para");
 display.textContent = "0";
 
 function displayNumber (number) {
+    
+    // resets the font size if needed
+    display.style.fontSize = "70px";
 
-    // check for active miscKey, if active and user tries to type the current number 
+    // check for active miscKey, if active and user tries to type then the current number 
     // will be over written and key turned off
     if (miscKey == true){
         display.textContent = number;
@@ -20,8 +23,8 @@ function displayNumber (number) {
         currentNumber = number;
 
     //allows there to be a leading zero for decimals
-    } else if (display.textContent == "0" && number == "."){
-        display.textContent = display.textContent.concat(number)
+    } else if (display.textContent == "0" && number == "." || currentNumber == null && number == "."){
+        display.textContent = "0."
         currentNumber = display.textContent;
     
      // makes sure there are no leading zeroes for larger numbers  
@@ -64,8 +67,10 @@ function clearCalc(){
     currentNumber = 0;
     previousNumber = null;
     operation = null;
-    result = {};
+    result.whole = null;
+    result.rounded = null;
     miscKey = false;
+    display.style.fontSize = "70px";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,21 +125,34 @@ function posiNegi () {
 let currentNumber = 0;
 let previousNumber = null;
 let operation = null; 
-let result = {};
+let result = {
+    whole: null,
+    rounded: null,
+};
 
 function operator (operationCall) {
 
-    //initial case where only current number is defined (0)
-    if (operation == null && currentNumber != null && previousNumber == null){
+    // "equals" is an operation, but it shouldn't go through unless everything is defined
+    if (operationCall == "equals" && (operation == null || previousNumber == null || currentNumber == null)){
+        return
+    
+    //initial case where only current number is defined (0)     
+    } else if (operation == null && currentNumber != null && previousNumber == null){
         operation = operationCall;
         previousNumber = currentNumber;
         currentNumber = null;
 
-        // allows user to declare operation before inputting second number 
+    // allows user to declare operation before inputting second number 
     } else if (operation == null && previousNumber != null && currentNumber == null){
         operation = operationCall;
 
-        //all three components must be defined before an operation can proceed 
+    // this is for after a result has been calculated that the user intentionally wants to dismiss
+    } else if (operation == null && previousNumber != null && currentNumber != null){
+        operation = operationCall;
+        previousNumber = currentNumber;
+        currentNumber = null;
+
+    //all three components must be defined before an operation can proceed 
     } else if (operation != null && previousNumber != null && currentNumber != null){
         if (operation == "addition"){
             add(previousNumber, currentNumber)
@@ -154,14 +172,14 @@ function operator (operationCall) {
                 divide(previousNumber, currentNumber)
             }
         }
-        //no new operation will be logged if the = button is pressed. 
-        //otherwise the next operation to perform is logged
+        // no new operation will be logged if the = button is pressed. 
+        // otherwise the next operation to perform is logged
         if (operationCall == "equals"){
             operation = null;
         } else {
             operation = operationCall
         }
-         // prepares next operation by reassigning variables
+        // prepares next operation by reassigning variables
         previousNumber = result.whole ;
         display.textContent = result.rounded ;
         currentNumber = null;
@@ -176,7 +194,13 @@ function operator (operationCall) {
 function rounder (res){
     //rounds non integer and small numbers 
     if (!Number.isInteger(res)){
-        return parseFloat(res.toFixed(4))
+        // this shrinks large non integer numbers so that they still fit in frame 
+        if (res > 99999 && res.toString().length>11){
+            display.style.fontSize = `${800/res.toFixed(4).toString().length}`+'px';
+            return parseFloat(res.toFixed(4))
+        } else {
+            return parseFloat(res.toFixed(4))
+        }
     
     // javascript automatically switches to scientific notation for very large numbers
     // by adding this check i avoid putting it in scientific notation twice

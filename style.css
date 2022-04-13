@@ -14,18 +14,20 @@
 
 #display {
     display: flex;
-    flex: auto;
     flex-direction: row-reverse;
-    max-height: 100px;
+    flex: auto;
     border: 2px solid black;
     margin-bottom: 8px;
+    align-items: flex-end;
 }
 
 #para {
     display: flex;
     font-size: 70px;
+    flex-direction: row-reverse;
     padding-left: 8px;
     padding-right: 8px;
+    bottom: 0;
 }
 
 #buttonContainer {
@@ -38,7 +40,3 @@ button {
     min-width: 94px;
     height: 75px;
 }
-
-/* #zero {
-    min-width: 196px;
-} */
