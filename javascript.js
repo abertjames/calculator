@@ -159,6 +159,7 @@ function operator (operationCall) {
         previousNumber = result ;
         display.textContent = result ;
         currentNumber = null;
+        miscKey = false;
     }
 }
 
@@ -188,3 +189,19 @@ function rounder (res){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////// keyboard input ////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// document.addEventListener('keydown', displayNumber(e.code));
+document.addEventListener('keydown', logKey);
+
+function logKey(e) {
+    // console.log(e)
+    console.log(e.keyCode);
+    // console.log(typeof(e.key))
+    if (48 <= e.keyCode && e.keyCode<= 57) {
+        displayNumber(e.key)
+    } else if (e.keyCode == 8) {
+        backspace()
+    } else if (e.keyCode == 13) {
+        operator(operation)
+    }
+}
