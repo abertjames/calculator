@@ -106,15 +106,31 @@ function divide (prevNum, curNum) {
 // on the current number but not affect anything else 
 let miscKey = false;
 function percent () {
-    currentNumber /= 100
-    display.textContent = rounder (parseInt(display.textContent)/100);
-    miscKey = true
+    // just after an operation there will be no current number but the display will show a value
+    // and there will be a previous number. this allows you to pull that previous value back to current
+    // and edit it 
+    if (currentNumber == null && previousNumber != null) {
+        currentNumber = previousNumber/100;
+        previousNumber = null;
+        display.textContent = rounder (parseInt(display.textContent)/100);
+    } else {
+        currentNumber /= 100
+        display.textContent = rounder (parseInt(display.textContent)/100);
+    }
+    miscKey = true    
 }
 
 function posiNegi () {
-    currentNumber *= -1;
-    display.textContent = currentNumber;
-    miscKey = true;
+
+    if (currentNumber == null && previousNumber != null) {
+        currentNumber = previousNumber * -1;
+        previousNumber = null;
+        display.textContent = currentNumber;
+    } else {
+        currentNumber *= -1
+        display.textContent = currentNumber;
+    }
+    miscKey = true
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
