@@ -112,11 +112,11 @@ function percent () {
     if (currentNumber == null && previousNumber != null) {
         currentNumber = previousNumber/100;
         previousNumber = null;
-        display.textContent = rounder (parseInt(display.textContent)/100);
+        display.textContent = rounder (display.textContent/100);
         operation = null;
     } else {
         currentNumber /= 100;
-        display.textContent = rounder (parseInt(display.textContent)/100);
+        display.textContent = rounder (display.textContent/100);
     }
     miscKey = true;
 }
@@ -227,7 +227,11 @@ function rounder (res){
     
     //rounds large numbers
     } else if (res.toString().length > 11){
-        return (`${res.toString().slice(0,1)}` + "." + `${res.toString().slice(1,3)}` + "e" + "+" + `${res.toString().length-1}`)
+        if (res > 0){
+            return (`${res.toString().slice(0,1)}` + "." + `${res.toString().slice(1,3)}` + "e" + "+" + `${res.toString().length-1}`)
+        } else if (res < 0) {
+            return (`${res.toString().slice(0,2)}` + "." + `${res.toString().slice(2,4)}` + "e" + "+" + `${res.toString().length-2}`)
+        }
     
     // if it doesnt need rounding it is returned 
     } else {
