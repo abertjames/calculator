@@ -10,6 +10,8 @@
     display: flex;
     flex-direction: column;
     padding: 8px;
+    background-color: black;
+    border-radius: 8px;
 }
 
 #display {
@@ -19,14 +21,14 @@
     border: 2px solid black;
     margin-bottom: 8px;
     align-items: flex-end;
+    background-color: rgb(185 200 175);
 }
 
 #para {
     display: flex;
     font-size: 70px;
     flex-direction: row-reverse;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-right: 4px;
     bottom: 0;
 }
 
@@ -39,4 +41,18 @@
 button {
     min-width: 94px;
     height: 75px;
+    border: none;
+    border-radius: 8px;
+}
+
+.misc {
+    background-color: #3939ff;
+}
+
+.function {
+    background-color: orange;
+}
+
+.number {
+    background-color: #306430;
 }

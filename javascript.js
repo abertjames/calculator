@@ -85,7 +85,7 @@ function add (prevNum, curNum) {
 }
 
 function subtract (prevNum, curNum) {
-    result.whole = (+prevNum - +curNum)
+    result.whole = (+prevNum - +curNum);
     result.rounded = rounder(result.whole);
     return result
 }
@@ -113,11 +113,12 @@ function percent () {
         currentNumber = previousNumber/100;
         previousNumber = null;
         display.textContent = rounder (parseInt(display.textContent)/100);
+        operation = null;
     } else {
-        currentNumber /= 100
+        currentNumber /= 100;
         display.textContent = rounder (parseInt(display.textContent)/100);
     }
-    miscKey = true    
+    miscKey = true;
 }
 
 function posiNegi () {
@@ -125,12 +126,13 @@ function posiNegi () {
     if (currentNumber == null && previousNumber != null) {
         currentNumber = previousNumber * -1;
         previousNumber = null;
-        display.textContent = currentNumber;
+        display.textContent = rounder (currentNumber);
+        operation = null;
     } else {
-        currentNumber *= -1
-        display.textContent = currentNumber;
+        currentNumber *= -1;
+        display.textContent = rounder (currentNumber);
     }
-    miscKey = true
+    miscKey = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -211,7 +213,7 @@ function rounder (res){
     //rounds non integer and small numbers 
     if (!Number.isInteger(res)){
         // this shrinks large non integer numbers so that they still fit in frame 
-        if (res > 99999 && res.toString().length>11){
+        if ((res > 99999 || res < -99999) && res.toString().length>11){
             display.style.fontSize = `${800/res.toFixed(4).toString().length}`+'px';
             return parseFloat(res.toFixed(4))
         } else {
