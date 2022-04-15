@@ -213,7 +213,7 @@ function rounder (res){
     //rounds non integer and small numbers 
     if (!Number.isInteger(res)){
         // this shrinks large non integer numbers so that they still fit in frame 
-        if ((res > 99999 || res < -99999) && res.toString().length>11){
+        if ((res > 999999 || res < -999999) && res.toString().length>11){
             display.style.fontSize = `${800/res.toFixed(4).toString().length}`+'px';
             return parseFloat(res.toFixed(4))
         } else {
@@ -253,5 +253,8 @@ function logKey(e) {
         backspace()
     } else if (e.keyCode == 13) {
         operator(operation)
+    } else if (e.keyCode == 190) {
+        console.log(e.key)
+        displayNumber(e.key)
     }
 }
